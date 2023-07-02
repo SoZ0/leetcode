@@ -1,6 +1,3 @@
-import java.io.IOError;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /*
  * @lc app=leetcode id=20 lang=java
@@ -9,42 +6,32 @@ import java.util.Collections;
  */
 
 // @lc code=start
-class Solution {
-    public boolean isValid(String s) {
-        ArrayList<Integer> opens = new ArrayList<>();
-        ArrayList<Integer> closes = new ArrayList<>();
 
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int value = 0;
-            switch (c) {
-                case '(':
-                value++;
-                case '{':
-                value++;
-                case '[':
-                value++;
-                opens.add(value);
-                continue;
-                case ')':
-                value++;
-                case '}':
-                value++;
-                case ']':
-                value++;
-                closes.add(value);
-                continue;
+import java.util.HashMap;
+import java.util.Stack;
+
+class Solution {
+
+    public boolean isValid(String s) {
+
+        HashMap<Character, Character> charPairs = new HashMap<>();
+
+        charPairs.put('{', '}');
+        charPairs.put('[', ']');
+        charPairs.put('(', ')');
+
+        Stack<Character> stack = new Stack<>();
+        for (Character c : s.toCharArray()) {
+
+            if(charPairs.containsKey(c)){
+                stack.add(charPairs.get(c));
+            }else{
+                if(stack.isEmpty() || c != stack.peek()) return false;
+
+                stack.pop();
             }
         }
-        System.out.println(opens + " " + closes);
-        Collections.reverse(closes);
-
-        if(opens.size() != closes.size()) return false;
-         
-        for (int i = 0; i < opens.size(); i++) {
-            if(opens.get(i) != closes.get(i)) return false;
-        }
-        return true;
+        return stack.empty();
     }
 }
 // @lc code=end
